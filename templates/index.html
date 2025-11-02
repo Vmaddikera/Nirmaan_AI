@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Analysis System</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .loading {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .royal-blue {
+            background-color: #1e3a8a;
+        }
+        .royal-blue-text {
+            color: #1e3a8a;
+        }
+        .black-text {
+            color: #000000;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold mb-4">Candidate Analysis System</h1>
+                <p class="text-xl opacity-90">Comprehensive NLP Powered Candidate Assessment using emotion, gaze, and text analysis</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Input Form -->
+        <div class="bg-white border-2 border-gray-200 rounded-lg shadow-lg p-8 mb-8">
+            <h2 class="text-2xl font-bold black-text mb-6">Candidate Data Input</h2>
+            
+            <form id="analysisForm" class="space-y-8">
+                <!-- Emotion Features -->
+                <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                    <h3 class="text-lg font-semibold royal-blue-text mb-4">
+                        <i class="fas fa-heart mr-2"></i>Emotion Features (0.0 - 1.0)
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Anger</label>
+                            <input type="number" id="anger" name="anger" step="0.01" min="0" max="1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Disgust</label>
+                            <input type="number" id="disgust" name="disgust" step="0.01" min="0" max="1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Fear</label>
+                            <input type="number" id="fear" name="fear" step="0.01" min="0" max="1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Joy</label>
+                            <input type="number" id="joy" name="joy" step="0.01" min="0" max="1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Neutral</label>
+                            <input type="number" id="neutral" name="neutral" step="0.01" min="0" max="1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Sadness</label>
+                            <input type="number" id="sadness" name="sadness" step="0.01" min="0" max="1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Surprise</label>
+                            <input type="number" id="surprise" name="surprise" step="0.01" min="0" max="1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gaze Features -->
+                <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                    <h3 class="text-lg font-semibold royal-blue-text mb-4">
+                        <i class="fas fa-eye mr-2"></i>Gaze Features
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Fixation Duration</label>
+                            <input type="number" id="fixation_duration" name="fixation_duration" step="0.1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Saccade Amplitude</label>
+                            <input type="number" id="saccade_amplitude" name="saccade_amplitude" step="0.1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Pupil Diameter</label>
+                            <input type="number" id="pupil_diameter" name="pupil_diameter" step="0.1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Gaze X</label>
+                            <input type="number" id="gaze_x" name="gaze_x" step="0.1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Gaze Y</label>
+                            <input type="number" id="gaze_y" name="gaze_y" step="0.1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Blink Rate</label>
+                            <input type="number" id="blink_rate" name="blink_rate" step="0.1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Attention Span (0.0 - 1.0)</label>
+                            <input type="number" id="attention_span" name="attention_span" step="0.01" min="0" max="1" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Content -->
+                <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                    <h3 class="text-lg font-semibold royal-blue-text mb-4">
+                        <i class="fas fa-file-text mr-2"></i>Text Content
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium black-text mb-2">Transcript Text</label>
+                            <textarea id="transcript_text" name="transcript_text" rows="4" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                      placeholder="Enter the candidate's response transcript..." required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" id="analyzeBtn" 
+                            class="royal-blue text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-brain mr-2"></i>Analyze Candidate
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="hidden">
+            <div class="bg-white border-2 border-gray-200 rounded-lg shadow-lg p-8">
+                <h2 class="text-2xl font-bold black-text mb-6">Analysis Results</h2>
+                <div id="resultsContent"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="royal-blue text-white py-6 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 AI Candidate Analysis System. Powered by Advanced Machine Learning.</p>
+        </div>
+    </footer>
+
+    <script>
+
+        // Analysis form submission
+        document.getElementById('analysisForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const resultsDiv = document.getElementById('results');
+            const resultsContent = document.getElementById('resultsContent');
+            
+            // Show loading state
+            analyzeBtn.innerHTML = '<i class="fas fa-spinner loading mr-2"></i>Analyzing...';
+            analyzeBtn.disabled = true;
+            
+            try {
+                // Collect form data
+                const formData = new FormData(this);
+                
+                // Send request
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                console.log('Analysis result:', result);
+                
+                if (result.success) {
+                    console.log('Analysis successful, displaying results...');
+                    displayResults(result.results);
+                    resultsDiv.classList.remove('hidden');
+                    resultsDiv.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    console.log('Analysis failed:', result.error);
+                    alert('Error: ' + (result.error || 'Analysis failed'));
+                }
+                
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                // Reset button
+                analyzeBtn.innerHTML = '<i class="fas fa-brain mr-2"></i>Analyze Candidate';
+                analyzeBtn.disabled = false;
+            }
+        });
+
+        function displayResults(results) {
+            console.log('Displaying results:', results);
+            const resultsContent = document.getElementById('resultsContent');
+            let html = '<div class="space-y-6">';
+            
+            // Overall Assessment
+            if (results.assessment) {
+                const assessment = results.assessment;
+                html += `
+                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4">Final Assessment</h3>
+                    </div>
+                `;
+            }
+            
+            // Detailed Analysis Sections
+            if (results.emotion) {
+                const emotion = results.emotion;
+                html += `
+                    <div class="bg-red-50 p-6 rounded-lg card-hover">
+                        <h3 class="text-lg font-semibold text-red-800 mb-4">Emotion Analysis</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p><strong>Dominant Emotion:</strong> ${emotion.dominant_emotion || 'N/A'}</p>
+                                <p><strong>Emotion Score:</strong> ${(emotion.emotion_score || 0).toFixed(2)}/1.0</p>
+                            </div>
+                            <div>
+                                <p><strong>Interpretation:</strong> ${emotion.interpretation || 'N/A'}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (results.gaze) {
+                const gaze = results.gaze;
+                html += `
+                    <div class="bg-blue-50 p-6 rounded-lg card-hover">
+                        <h3 class="text-lg font-semibold text-blue-800 mb-4">Gaze Analysis</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p><strong>Attention Score:</strong> ${(gaze.attention_score || 0).toFixed(2)}/1.0</p>
+                                <p><strong>Focus Level:</strong> ${gaze.focus_level || 'N/A'}</p>
+                            </div>
+                            <div>
+                                <p><strong>Eye Contact:</strong> ${gaze.eye_contact || 'N/A'}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (results.nlp) {
+                const nlp = results.nlp;
+                html += `
+                    <div class="bg-green-50 p-6 rounded-lg card-hover">
+                        <h3 class="text-lg font-semibold text-green-800 mb-4">NLP Analysis</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p><strong>Sentiment:</strong> ${nlp.sentiment || 'N/A'}</p>
+                                <p><strong>Confidence:</strong> ${(nlp.sentiment_confidence || 0).toFixed(2)}</p>
+                            </div>
+                            <div>
+                                <p><strong>Key Skills:</strong> ${(nlp.key_skills || []).join(', ') || 'N/A'}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (results.transcript) {
+                const transcript = results.transcript;
+                html += `
+                    <div class="bg-purple-50 p-6 rounded-lg card-hover">
+                        <h3 class="text-lg font-semibold text-purple-800 mb-4">Transcript Analysis</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p><strong>Communication Score:</strong> ${typeof transcript.communication_score === 'number' ? transcript.communication_score.toFixed(2) : 'N/A'}/1.0</p>
+                                <p><strong>Clarity Score:</strong> ${typeof transcript.clarity_score === 'number' ? transcript.clarity_score.toFixed(2) : 'N/A'}/1.0</p>
+                            </div>
+                            <div>
+                                <p><strong>Response Quality:</strong> ${transcript.response_quality || 'N/A'}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            
+            // Strengths and Weaknesses
+            if (results.assessment?.strengths || results.assessment?.weaknesses) {
+                html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-6">';
+                
+                if (results.assessment.strengths) {
+                    html += `
+                        <div class="bg-green-50 p-6 rounded-lg card-hover">
+                            <h3 class="text-lg font-semibold text-green-800 mb-4">Strengths</h3>
+                            <ul class="space-y-2">
+                                ${results.assessment.strengths.map(strength => `
+                                    <li class="flex items-start">
+                                        <span class="text-green-600 mr-2">•</span>
+                                        <span>${strength}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                if (results.assessment.weaknesses) {
+                    html += `
+                        <div class="bg-red-50 p-6 rounded-lg card-hover">
+                            <h3 class="text-lg font-semibold text-red-800 mb-4">Areas for Improvement</h3>
+                            <ul class="space-y-2">
+                                ${results.assessment.weaknesses.map(weakness => `
+                                    <li class="flex items-start">
+                                        <span class="text-red-600 mr-2">•</span>
+                                        <span>${weakness}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            console.log('Generated HTML:', html);
+            resultsContent.innerHTML = html;
+            console.log('Results content updated');
+        }
+    </script>
+</body>
+</html>
