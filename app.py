@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Flask Web Application for AI Candidate Analysis
-"""
+
 
 from flask import Flask, request, jsonify, render_template
 import pandas as pd
