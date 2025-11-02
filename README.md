@@ -29,7 +29,6 @@ A comprehensive web application that analyzes candidate performance using emotio
 
 ## Project Interface
 
-### Screenshots
 
 ![Candidate Analysis Interface](cand_analysis.png)
 
