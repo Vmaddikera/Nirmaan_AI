@@ -3,380 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Candidate Analysis System</title>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+    <title>Advanced NLP-based Transcript Evaluation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
-        .card-hover {
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .glass-card-dark {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        .floating-2 {
+            animation: float2 8s ease-in-out infinite;
+        }
+        
+        @keyframes float2 {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(-5deg); }
+        }
+        
+        .floating-3 {
+            animation: float3 10s ease-in-out infinite;
+        }
+        
+        @keyframes float3 {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .score-display {
+            font-size: 72px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             transition: all 0.3s ease;
         }
-        .card-hover:hover {
+        
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
         }
+        
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
+        
         .loading {
             animation: spin 1s linear infinite;
         }
+        
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-        .royal-blue {
-            background-color: #1e3a8a;
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
         }
-        .royal-blue-text {
-            color: #1e3a8a;
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
         }
-        .black-text {
-            color: #000000;
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.5);
+            border-radius: 10px;
+        }
+        
+        .pulse-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
     </style>
 </head>
-<body class="bg-white min-h-screen">
-    <!-- Header -->
-    <header class="gradient-bg text-white py-8">
-        <div class="container mx-auto px-4">
-            <div class="text-center">
-                <h1 class="text-4xl font-bold mb-4">Candidate Analysis System</h1>
-                <p class="text-xl opacity-90">Comprehensive NLP Powered Candidate Assessment using emotion, gaze, and text analysis</p>
-            </div>
-        </div>
-    </header>
+<body class="p-6 md:p-12">
+    <!-- Floating Background Elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="floating absolute top-20 left-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="floating-2 absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+        <div class="floating-3 absolute top-1/2 left-1/2 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl"></div>
+    </div>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <!-- Input Form -->
-        <div class="bg-white border-2 border-gray-200 rounded-lg shadow-lg p-8 mb-8">
-            <h2 class="text-2xl font-bold black-text mb-6">Candidate Data Input</h2>
-            
-            <form id="analysisForm" class="space-y-8">
-                <!-- Emotion Features -->
-                <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
-                    <h3 class="text-lg font-semibold royal-blue-text mb-4">
-                        <i class="fas fa-heart mr-2"></i>Emotion Features (0.0 - 1.0)
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Anger</label>
-                            <input type="number" id="anger" name="anger" step="0.01" min="0" max="1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Disgust</label>
-                            <input type="number" id="disgust" name="disgust" step="0.01" min="0" max="1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Fear</label>
-                            <input type="number" id="fear" name="fear" step="0.01" min="0" max="1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Joy</label>
-                            <input type="number" id="joy" name="joy" step="0.01" min="0" max="1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Neutral</label>
-                            <input type="number" id="neutral" name="neutral" step="0.01" min="0" max="1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Sadness</label>
-                            <input type="number" id="sadness" name="sadness" step="0.01" min="0" max="1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Surprise</label>
-                            <input type="number" id="surprise" name="surprise" step="0.01" min="0" max="1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
+    <div class="max-w-6xl mx-auto relative z-10">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+                Advanced NLP-based<br/>Transcript Evaluation
+            </h1>
+        </header>
+
+        <!-- Main Input Card -->
+        <div class="glass-card-dark rounded-[32px] p-8 md:p-12 mb-8">
+            <form id="analysisForm" class="space-y-6">
+                <!-- Transcript Input -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        <i class="fas fa-file-alt mr-2"></i>Transcript Text
+                    </label>
+                    <textarea 
+                        id="transcript_text" 
+                        name="transcript_text" 
+                        rows="10" 
+                        class="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:border-purple-500 transition-all resize-none text-gray-700 custom-scrollbar" 
+                        placeholder="Paste your transcript here...&#10;&#10;The system will analyze content structure, grammar, vocabulary, clarity, and sentiment."
+                        required></textarea>
+                    <div class="flex justify-between items-center mt-2 text-sm text-gray-500">
+                        <span><span id="charCount">0</span> characters · <span id="wordCount">0</span> words</span>
+                        <button type="button" id="loadSampleBtn" class="text-purple-600 hover:text-purple-700 font-medium">
+                            Load Sample
+                        </button>
                     </div>
                 </div>
 
-                <!-- Gaze Features -->
-                <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
-                    <h3 class="text-lg font-semibold royal-blue-text mb-4">
-                        <i class="fas fa-eye mr-2"></i>Gaze Features
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Fixation Duration</label>
-                            <input type="number" id="fixation_duration" name="fixation_duration" step="0.1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Saccade Amplitude</label>
-                            <input type="number" id="saccade_amplitude" name="saccade_amplitude" step="0.1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Pupil Diameter</label>
-                            <input type="number" id="pupil_diameter" name="pupil_diameter" step="0.1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Gaze X</label>
-                            <input type="number" id="gaze_x" name="gaze_x" step="0.1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Gaze Y</label>
-                            <input type="number" id="gaze_y" name="gaze_y" step="0.1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Blink Rate</label>
-                            <input type="number" id="blink_rate" name="blink_rate" step="0.1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Attention Span (0.0 - 1.0)</label>
-                            <input type="number" id="attention_span" name="attention_span" step="0.01" min="0" max="1" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Text Content -->
-                <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
-                    <h3 class="text-lg font-semibold royal-blue-text mb-4">
-                        <i class="fas fa-file-text mr-2"></i>Text Content
-                    </h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium black-text mb-2">Transcript Text</label>
-                            <textarea id="transcript_text" name="transcript_text" rows="4" 
-                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                      placeholder="Enter the candidate's response transcript..." required></textarea>
-                        </div>
-                    </div>
+                <!-- Duration Input (Optional) -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        <i class="fas fa-clock mr-2"></i>Duration (seconds) <span class="text-gray-400 font-normal">- Optional</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        id="duration_seconds" 
+                        name="duration_seconds" 
+                        min="1" 
+                        step="1"
+                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-purple-500 transition-all text-gray-700" 
+                        placeholder="e.g., 52">
+                    <p class="text-xs text-gray-500 mt-2">Used for calculating speaking rate (words per minute)</p>
                 </div>
 
                 <!-- Submit Button -->
-                <div class="text-center">
-                    <button type="submit" id="analyzeBtn" 
-                            class="royal-blue text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl">
-                        <i class="fas fa-brain mr-2"></i>Analyze Candidate
-                    </button>
-                </div>
+                <button 
+                    type="submit" 
+                    id="analyzeBtn" 
+                    class="w-full btn-primary text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-xl">
+                    <i class="fas fa-brain mr-2"></i>Analyze Transcript
+                </button>
             </form>
         </div>
 
         <!-- Results Section -->
         <div id="results" class="hidden">
-            <div class="bg-white border-2 border-gray-200 rounded-lg shadow-lg p-8">
-                <h2 class="text-2xl font-bold black-text mb-6">Analysis Results</h2>
-                <div id="resultsContent"></div>
+            <!-- Overall Score Card -->
+            <div class="glass-card-dark rounded-[32px] p-12 mb-8 text-center">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-6">Analysis Results</h2>
+                <div class="score-display mb-4" id="overallScore">0</div>
+                <div class="text-gray-600 text-xl mb-6">
+                    out of <span class="font-semibold">100</span>
+                </div>
+                <div class="inline-flex items-center gap-3 glass-card px-6 py-3 rounded-full">
+                    <div class="w-3 h-3 rounded-full" id="statusDot"></div>
+                    <span class="font-semibold text-lg" id="performanceLevel">Excellent</span>
+                </div>
+                <div class="mt-8 flex justify-center gap-8 text-sm text-gray-600">
+                    <div>
+                        <i class="fas fa-file-word text-purple-500 mr-2"></i>
+                        <span id="wordCount2">0</span> words
+                    </div>
+                    <div>
+                        <i class="fas fa-paragraph text-purple-500 mr-2"></i>
+                        <span id="sentenceCount">0</span> sentences
+                    </div>
+                    <div>
+                        <i class="fas fa-clock text-purple-500 mr-2"></i>
+                        <span id="processingTime">0</span>s
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback Card -->
+            <div class="glass-card-dark rounded-[32px] p-8">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">
+                    <i class="fas fa-comment-dots mr-2"></i>Feedback
+                </h3>
+                <p class="text-gray-600 leading-relaxed" id="feedbackText"></p>
+            </div>
+
+            <!-- Per Criterion Results -->
+            <div class="glass-card-dark rounded-[32px] p-8 mt-8">
+                <h3 class="text-xl font-semibold text-gray-700 mb-6">
+                    <i class="fas fa-list mr-2"></i>Per Criterion Results
+                </h3>
+                <div id="criteriaList" class="space-y-4"></div>
             </div>
         </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="royal-blue text-white py-6 mt-12">
-        <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2024 AI Candidate Analysis System. Powered by Advanced Machine Learning.</p>
-        </div>
-    </footer>
+    </div>
 
     <script>
+        const sampleText = `Hello everyone, myself Muskan, studying in class 8th B section from Christ Public School. 
+I am 13 years old. I live with my family. There are 3 people in my family, me, my mother and my father.
+One special thing about my family is that they are very kind hearted to everyone and soft spoken. One thing I really enjoy is play, playing cricket and taking wickets.
+A fun fact about me is that I see in mirror and talk by myself. One thing people don't know about me is that I once stole a toy from one of my cousin.
+My favorite subject is science because it is very interesting. Through science I can explore the whole world and make the discoveries and improve the lives of others. 
+Thank you for listening.`;
 
-        // Analysis form submission
+        const transcriptTextarea = document.getElementById('transcript_text');
+        const charCount = document.getElementById('charCount');
+        const wordCount = document.getElementById('wordCount');
+
+        function updateCounts() {
+            const text = transcriptTextarea.value;
+            charCount.textContent = text.length;
+            const words = text.trim().split(/\s+/).filter(w => w.length > 0);
+            wordCount.textContent = words.length;
+        }
+
+        transcriptTextarea.addEventListener('input', updateCounts);
+
+        document.getElementById('loadSampleBtn').addEventListener('click', function() {
+            transcriptTextarea.value = sampleText;
+            document.getElementById('duration_seconds').value = '52';
+            updateCounts();
+        });
+
         document.getElementById('analysisForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const analyzeBtn = document.getElementById('analyzeBtn');
             const resultsDiv = document.getElementById('results');
-            const resultsContent = document.getElementById('resultsContent');
             
-            // Show loading state
             analyzeBtn.innerHTML = '<i class="fas fa-spinner loading mr-2"></i>Analyzing...';
             analyzeBtn.disabled = true;
             
             try {
-                // Collect form data
                 const formData = new FormData(this);
-                
-                // Send request
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
                     body: formData
                 });
                 
                 const result = await response.json();
-                console.log('Analysis result:', result);
                 
                 if (result.success) {
-                    console.log('Analysis successful, displaying results...');
-                    displayResults(result.results);
+                    displayResults(result.results, result.processing_time);
                     resultsDiv.classList.remove('hidden');
-                    resultsDiv.scrollIntoView({ behavior: 'smooth' });
+                    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 } else {
-                    console.log('Analysis failed:', result.error);
                     alert('Error: ' + (result.error || 'Analysis failed'));
                 }
                 
             } catch (error) {
                 alert('Error: ' + error.message);
             } finally {
-                // Reset button
-                analyzeBtn.innerHTML = '<i class="fas fa-brain mr-2"></i>Analyze Candidate';
+                analyzeBtn.innerHTML = '<i class="fas fa-brain mr-2"></i>Analyze Transcript';
                 analyzeBtn.disabled = false;
             }
         });
 
-        function displayResults(results) {
-            console.log('Displaying results:', results);
-            const resultsContent = document.getElementById('resultsContent');
-            let html = '<div class="space-y-6">';
+        function displayResults(results, processingTime) {
+            // Overall score
+            document.getElementById('overallScore').textContent = Math.round(results.overall_score);
             
-            // Overall Assessment
-            if (results.assessment) {
-                const assessment = results.assessment;
-                html += `
-                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-lg">
-                        <h3 class="text-2xl font-bold mb-4">Final Assessment</h3>
-                    </div>
-                `;
+            // Performance level with color
+            const performanceLevel = results.performance_level;
+            const statusDot = document.getElementById('statusDot');
+            const perfLevel = document.getElementById('performanceLevel');
+            perfLevel.textContent = performanceLevel;
+            
+            if (performanceLevel === 'Excellent') {
+                statusDot.className = 'w-3 h-3 rounded-full bg-green-500';
+            } else if (performanceLevel === 'Good') {
+                statusDot.className = 'w-3 h-3 rounded-full bg-blue-500';
+            } else if (performanceLevel === 'Average') {
+                statusDot.className = 'w-3 h-3 rounded-full bg-yellow-500';
+            } else {
+                statusDot.className = 'w-3 h-3 rounded-full bg-red-500';
             }
             
-            // Detailed Analysis Sections
-            if (results.emotion) {
-                const emotion = results.emotion;
-                html += `
-                    <div class="bg-red-50 p-6 rounded-lg card-hover">
-                        <h3 class="text-lg font-semibold text-red-800 mb-4">Emotion Analysis</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <p><strong>Dominant Emotion:</strong> ${emotion.dominant_emotion || 'N/A'}</p>
-                                <p><strong>Emotion Score:</strong> ${(emotion.emotion_score || 0).toFixed(2)}/1.0</p>
-                            </div>
-                            <div>
-                                <p><strong>Interpretation:</strong> ${emotion.interpretation || 'N/A'}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
+            // Stats
+            document.getElementById('wordCount2').textContent = results.words;
+            document.getElementById('sentenceCount').textContent = results.sentences;
+            document.getElementById('processingTime').textContent = processingTime.toFixed(2);
             
-            if (results.gaze) {
-                const gaze = results.gaze;
-                html += `
-                    <div class="bg-blue-50 p-6 rounded-lg card-hover">
-                        <h3 class="text-lg font-semibold text-blue-800 mb-4">Gaze Analysis</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <p><strong>Attention Score:</strong> ${(gaze.attention_score || 0).toFixed(2)}/1.0</p>
-                                <p><strong>Focus Level:</strong> ${gaze.focus_level || 'N/A'}</p>
-                            </div>
-                            <div>
-                                <p><strong>Eye Contact:</strong> ${gaze.eye_contact || 'N/A'}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
+            // Feedback
+            document.getElementById('feedbackText').textContent = results.overall_feedback;
             
-            if (results.nlp) {
-                const nlp = results.nlp;
-                html += `
-                    <div class="bg-green-50 p-6 rounded-lg card-hover">
-                        <h3 class="text-lg font-semibold text-green-800 mb-4">NLP Analysis</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <p><strong>Sentiment:</strong> ${nlp.sentiment || 'N/A'}</p>
-                                <p><strong>Confidence:</strong> ${(nlp.sentiment_confidence || 0).toFixed(2)}</p>
-                            </div>
-                            <div>
-                                <p><strong>Key Skills:</strong> ${(nlp.key_skills || []).join(', ') || 'N/A'}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
+            // Display criteria in normal form
+            const criteriaList = document.getElementById('criteriaList');
+            let criteriaHTML = '';
             
-            if (results.transcript) {
-                const transcript = results.transcript;
-                html += `
-                    <div class="bg-purple-50 p-6 rounded-lg card-hover">
-                        <h3 class="text-lg font-semibold text-purple-800 mb-4">Transcript Analysis</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <p><strong>Communication Score:</strong> ${typeof transcript.communication_score === 'number' ? transcript.communication_score.toFixed(2) : 'N/A'}/1.0</p>
-                                <p><strong>Clarity Score:</strong> ${typeof transcript.clarity_score === 'number' ? transcript.clarity_score.toFixed(2) : 'N/A'}/1.0</p>
-                            </div>
-                            <div>
-                                <p><strong>Response Quality:</strong> ${transcript.response_quality || 'N/A'}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            
-            // Strengths and Weaknesses
-            if (results.assessment?.strengths || results.assessment?.weaknesses) {
-                html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-6">';
+            results.criteria.forEach((criterion, index) => {
+                const percentage = criterion.max_score > 0 ? ((criterion.score / criterion.max_score) * 100).toFixed(0) : 0;
+                const barColor = percentage >= 80 ? 'bg-green-500' : percentage >= 60 ? 'bg-blue-500' : percentage >= 40 ? 'bg-yellow-500' : 'bg-red-500';
                 
-                if (results.assessment.strengths) {
-                    html += `
-                        <div class="bg-green-50 p-6 rounded-lg card-hover">
-                            <h3 class="text-lg font-semibold text-green-800 mb-4">Strengths</h3>
-                            <ul class="space-y-2">
-                                ${results.assessment.strengths.map(strength => `
-                                    <li class="flex items-start">
-                                        <span class="text-green-600 mr-2">•</span>
-                                        <span>${strength}</span>
-                                    </li>
-                                `).join('')}
-                            </ul>
+                criteriaHTML += `
+                    <div class="bg-white/50 backdrop-blur-sm p-6 rounded-2xl border border-white/30">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-semibold text-gray-800 text-lg">${criterion.criterion}</h4>
+                                <p class="text-sm text-gray-500 mt-1">${criterion.category}</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-2xl font-bold text-gray-800">${criterion.score}<span class="text-lg text-gray-500">/${criterion.max_score}</span></div>
+                                <div class="text-sm text-gray-500">Weight: ${criterion.weight}</div>
+                            </div>
                         </div>
-                    `;
-                }
-                
-                if (results.assessment.weaknesses) {
-                    html += `
-                        <div class="bg-red-50 p-6 rounded-lg card-hover">
-                            <h3 class="text-lg font-semibold text-red-800 mb-4">Areas for Improvement</h3>
-                            <ul class="space-y-2">
-                                ${results.assessment.weaknesses.map(weakness => `
-                                    <li class="flex items-start">
-                                        <span class="text-red-600 mr-2">•</span>
-                                        <span>${weakness}</span>
-                                    </li>
-                                `).join('')}
-                            </ul>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
+                            <div class="${barColor} h-2 rounded-full transition-all duration-1000" style="width: ${percentage}%"></div>
                         </div>
-                    `;
-                }
-                
-                html += '</div>';
-            }
+                        <p class="text-sm text-gray-600 leading-relaxed">${criterion.feedback}</p>
+                    </div>
+                `;
+            });
             
-            html += '</div>';
-            console.log('Generated HTML:', html);
-            resultsContent.innerHTML = html;
-            console.log('Results content updated');
+            criteriaList.innerHTML = criteriaHTML;
         }
     </script>
 </body>

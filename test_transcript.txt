@@ -1,9 +1,0 @@
-I believe I am a strong candidate for this position because of my extensive experience in software development and my passion for creating innovative solutions. I have worked on multiple projects that required both technical expertise and strong communication skills.
-
-Over the past 5 years, I have developed expertise in Python, JavaScript, and Java programming languages. I have extensive experience in web development using React, Angular, and Vue.js frameworks. I'm also proficient in backend development with Node.js, Django, and Spring Boot.
-
-My Strengths are 
-- Database management using SQL, MySQL, PostgreSQL, and MongoDB
-- Machine learning and data science with TensorFlow, PyTorch, and scikit-learn
-
-

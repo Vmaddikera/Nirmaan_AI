@@ -4,6 +4,9 @@ __pycache__/
 *$py.class
 *.so
 .Python
+venv/
+env/
+ENV/
 build/
 develop-eggs/
 dist/
@@ -19,14 +22,11 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
 # Virtual Environment
 venv/
-env/
 ENV/
-env.bak/
-venv.bak/
+env/
 
 # IDE
 .vscode/
@@ -34,66 +34,29 @@ venv.bak/
 *.swp
 *.swo
 *~
-
-# OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
 
-# Flask
-instance/
-.webassets-cache
+# Logs
+logs/
+*.log
+
+# Model cache
+.cache/
+models/
+sentence_transformers/
 
 # Environment variables
 .env
 .env.local
-.env.production
-.env.staging
 
-# Logs
-*.log
-logs/
-log/
-
-# Data files
-*.csv
-*.json
-*.xlsx
-*.xls
-data/
-uploads/
-results/
-
-# Model files
-models/
-*.pkl
-*.joblib
-*.h5
-*.pb
-
-# Cache
-.cache/
-__pycache__/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pytest
-.pytest_cache/
-.coverage
-htmlcov/
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
+# Notebooks
+Notebooks/
+*.ipynb_checkpoints/
 
 # Temporary files
 *.tmp
-*.temp
-temp/
-tmp/
+*.bak
+test_results.json
+
+# Documentation (optional - remove if you want to include)
+IMPLEMENTATION_SUMMARY.md
