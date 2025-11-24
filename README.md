@@ -53,14 +53,6 @@ After analysis, users receive a comprehensive breakdown with an overall score an
 4. Click "Analyze Transcript"
 5. View detailed results
 
-### API
-
-```bash
-curl -X POST http://localhost:5000/api/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"transcript_text": "Hello everyone...", "duration_seconds": 60}'
-```
-
 
 ## Technologies
 
