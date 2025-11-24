@@ -1,14 +1,13 @@
-# Rubric-Based Transcript Analysis System
+# NLP-Based Transcript Analysis System
 
-Evaluates transcripts using multi-criteria rubric with rule-based, NLP-based, and weighted scoring approaches.
+Evaluates transcripts using multi-criteria with rule-based, NLP-based, and weighted scoring approaches.
 
 ## Features
 
 - **8 Evaluation Criteria** (100 points total)
-- **Three Analysis Approaches**: Rule-based + NLP semantic similarity + Rubric-driven weighting
+- **Three Analysis Approaches**: Rule-based + NLP semantic similarity + rule-driven weighting
 - **Detailed Feedback**: Per-criterion scores and suggestions
-- **Modern UI**: Text input, file upload, real-time results
-- **JSON API**: Programmatic access
+- **UI**: Text input, file upload, real-time results
 
 ## Quick Start
 
@@ -22,6 +21,18 @@ python app.py
 # Open browser
 http://localhost:5000
 ```
+
+## Frontend
+
+### Phase 1: Transcript Input Interface
+The application provides a clean, intuitive interface for entering transcripts and optional duration for analysis.
+
+![Transcript Input Interface](1.png)
+
+### Phase 2: Analysis Results Dashboard
+After analysis, users receive a comprehensive breakdown with an overall score and detailed per-criterion evaluation.
+
+![Analysis Results](2.png)
 
 ## Rubric (100 Points)
 
@@ -50,18 +61,6 @@ curl -X POST http://localhost:5000/api/analyze \
   -d '{"transcript_text": "Hello everyone...", "duration_seconds": 60}'
 ```
 
-**Response:**
-```json
-{
-  "success": true,
-  "results": {
-    "overall_score": 86,
-    "percentage": 86.0,
-    "performance_level": "Excellent",
-    "criteria": [...]
-  }
-}
-```
 
 ## Technologies
 
@@ -98,9 +97,5 @@ Nirmaan/
 
 - First run downloads NLP models (~80MB, 2-5 minutes one-time)
 - Subsequent runs are fast (1-2 seconds per analysis)
-- Minimum 4GB RAM recommended
 - Works with any English transcript
 
-## License
-
-Developed for Nirmaan AI intern case study.
