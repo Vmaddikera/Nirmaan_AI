@@ -61,7 +61,7 @@ def analyze_transcript():
         print(f"Length: {len(transcript_text)} characters")
         print(f"Duration: {duration_seconds} seconds" if duration_seconds else "Duration: Not provided")
         print(f"{'='*80}\n")
-        
+            
         # Run analysis
         try:
             results = analyzer.analyze(transcript_text, duration_seconds)
@@ -132,21 +132,10 @@ def health_check():
 
 
 if __name__ == '__main__':
-    import os
-    
-    # Get port from environment variable (Railway sets this)
-    port = int(os.environ.get('PORT', 5000))
-    
-    # Check if running in production
-    is_production = os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('FLASK_ENV') == 'production'
-    
     print("\n" + "="*80)
     print("RUBRIC-BASED TRANSCRIPT ANALYSIS SYSTEM")
     print("="*80)
-    print(f"Environment: {'Production' if is_production else 'Development'}")
-    print(f"Server starting on port {port}...")
-    if not is_production:
-        print("Open your browser and go to: http://localhost:5000")
+    print("Server starting...")
+    print("Open your browser and go to: http://localhost:5000")
     print("="*80 + "\n")
-    
-    app.run(debug=not is_production, host='0.0.0.0', port=port)
+    app.run(debug=True, host='0.0.0.0', port=5000)
