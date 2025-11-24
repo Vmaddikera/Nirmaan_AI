@@ -68,7 +68,7 @@ Nirmaan/
 ├── app.py                              # Flask app
 ├── requirements.txt                    # Dependencies
 ├── Script/
-│   └── rubric_transcript_analyzer.py  # Main analyzer
+│   └── nlp_transcript_analyzer.py  # Main analyzer
 ├── templates/
 │   └── index.html                      # Web UI
 ├── utils/

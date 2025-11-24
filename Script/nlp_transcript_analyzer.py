@@ -1,10 +1,4 @@
-"""
-Rubric-Based Transcript Analyzer
-Evaluates transcripts using three approaches:
-1. Rule-based: keyword presence, exact matches, word-count checks
-2. NLP-based: semantic similarity using sentence transformers
-3. Data/rubric-driven weighting: combine signals according to criterion weights
-"""
+
 
 import re
 import pandas as pd
@@ -30,10 +24,10 @@ class RubricTranscriptAnalyzer:
         try:
             print("Loading sentence transformer model...")
             self.semantic_model = SentenceTransformer('all-MiniLM-L6-v2')
-            print("✓ Sentence transformer loaded")
+            print(" Sentence transformer loaded")
             log_info("Sentence transformer model loaded")
         except Exception as e:
-            print(f"⚠ Warning: Could not load sentence transformer: {e}")
+            print(f" Warning: Could not load sentence transformer: {e}")
             log_error("Failed to load sentence transformer", e)
             self.semantic_model = None
         
@@ -41,10 +35,10 @@ class RubricTranscriptAnalyzer:
         try:
             print("Loading language tool...")
             self.language_tool = language_tool_python.LanguageTool('en-US')
-            print("✓ Language tool loaded")
+            print("Language tool loaded")
             log_info("Language tool loaded")
         except Exception as e:
-            print(f"⚠ Warning: Could not load language tool: {e}")
+            print(f" Warning: Could not load language tool: {e}")
             log_error("Failed to load language tool (optional)", e)
             self.language_tool = None
         
@@ -52,16 +46,16 @@ class RubricTranscriptAnalyzer:
         try:
             print("Loading sentiment analyzer...")
             self.sentiment_analyzer = SentimentIntensityAnalyzer()
-            print("✓ Sentiment analyzer loaded")
+            print(" Sentiment analyzer loaded")
             log_info("Sentiment analyzer loaded")
         except Exception as e:
-            print(f"⚠ Warning: Could not load sentiment analyzer: {e}")
+            print(f" Warning: Could not load sentiment analyzer: {e}")
             log_error("Failed to load sentiment analyzer", e)
             self.sentiment_analyzer = None
         
         # Define the rubric based on Excel file
         self.rubric = self._load_rubric()
-        print(f"✓ Rubric loaded with {len(self.rubric)} criteria\n")
+        print(f" Rubric loaded with {len(self.rubric)} criteria\n")
         log_info(f"Rubric loaded with {len(self.rubric)} criteria")
     
     def _load_rubric(self) -> List[Dict]:

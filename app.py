@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-from Script.rubric_transcript_analyzer import RubricTranscriptAnalyzer
+from Script.nlp_transcript_analyzer import RubricTranscriptAnalyzer
 from utils.logger import log_info, log_error, log_analysis
 from utils.exceptions import TranscriptError, ValidationError
 from datetime import datetime
@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # Initialize analyzer
 print("="*80)
-print("INITIALIZING RUBRIC-BASED TRANSCRIPT ANALYZER")
+print("INITIALIZING NLP-BASED TRANSCRIPT ANALYZER")
 print("="*80)
 try:
     analyzer = RubricTranscriptAnalyzer()
@@ -127,13 +127,13 @@ def health_check():
         'status': 'healthy',
         'timestamp': datetime.now().isoformat(),
         'analyzer': 'ready',
-        'version': '2.0 - Rubric Based'
+        'version': '2.0 - NLP Based'
     })
 
 
 if __name__ == '__main__':
     print("\n" + "="*80)
-    print("RUBRIC-BASED TRANSCRIPT ANALYSIS SYSTEM")
+    print("NLP-BASED TRANSCRIPT ANALYSIS SYSTEM")
     print("="*80)
     print("Server starting...")
     print("Open your browser and go to: http://localhost:5000")
